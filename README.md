@@ -28,7 +28,6 @@ Recall is a unified AI workspace that provides a complete interface for interact
 
 - [Architecture Overview](#architecture-overview)
 - [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Feature Pages](#feature-pages)
 - [API Reference](#api-reference)
@@ -42,30 +41,44 @@ Recall is a unified AI workspace that provides a complete interface for interact
 
 ## Architecture Overview
 
-Recall follows a modern full-stack architecture built on Next.js App Router with server-side rendering at the edge.
+Recall follows a modern full-stack architecture built on Next.js App Router.
 
-```
-Client (Browser)
-  |
-  v
-Next.js App Router (Pages + Layouts)
-  |
-  +-- Client Components (React 19, Heroicons)
-  |     +-- ThemeProvider (light / dark / system)
-  |     +-- Sidebar + Topbar (global layout shell)
-  |     +-- Feature Pages (Chat, Research, Code, etc.)
-  |
-  +-- API Route Handlers (/api/*)
-        +-- Chat (SSE streaming)
-        +-- Conversations, Messages (CRUD)
-        +-- Research (multi-step agent)
-        +-- Code (explain, refactor, generate, run, debug, tests)
-        +-- RAG Pipeline (ingest, query, search, rerank, feedback, reindex)
-        +-- Projects, Memory (CRUD)
-        +-- Tools (browser, sql, vector-search, external-api)
-        +-- Extensions (chrome, excel, powerpoint)
-        +-- Admin, Health, Metrics, Webhooks
-        +-- Features (all unlocked, no billing)
+```mermaid
+graph TD
+    Client["Client (Browser)"]
+    NextJS["Next.js App Router"]
+    
+    subgraph Frontend [Frontend Layers]
+        ClientComp["Client Components (React 19)"]
+        ThemeProvider["ThemeProvider (Theming)"]
+        LayoutShell["Sidebar + Topbar Shell"]
+        FeaturePages["Feature Pages (Chat, Code, RAG, etc.)"]
+    end
+    
+    subgraph Backend [Backend Services /lib]
+        APIRoutes["API Route Handlers (/api/*)"]
+        AuthService["Auth Service (JWT/Bcrypt)"]
+        ClaudeSDK["Claude API Service (Anthropic)"]
+        RAGPipeline["RAG Pipeline (Chunking/Retriever)"]
+        MCPClient["MCP Client (JSON-RPC)"]
+        Sandbox["Code Sandbox (Multi-runtime)"]
+        DB["Database Layer (Prisma/Postgres)"]
+    end
+    
+    Client --> NextJS
+    NextJS --> Frontend
+    NextJS --> Backend
+    
+    Frontend --> ThemeProvider
+    Frontend --> LayoutShell
+    LayoutShell --> FeaturePages
+    
+    Backend --> AuthService
+    Backend --> ClaudeSDK
+    Backend --> RAGPipeline
+    Backend --> MCPClient
+    Backend --> Sandbox
+    Backend --> DB
 ```
 
 ### RAG System Architecture
@@ -112,62 +125,6 @@ Orchestration, caching (LRU with TTL), logging, APM, feedback loops, and schedul
 | **CDN** | ![Cloudflare](https://img.shields.io/badge/Cloudflare-CDN-F38020?style=flat-square&logo=cloudflare&logoColor=white) | Edge caching, DDoS protection |
 
 ---
-
-## Project Structure
-
-```
-recall/
-|-- app/
-|   |-- layout.tsx                    # Root layout (ThemeProvider + shell)
-|   |-- page.tsx                      # Home page (greeting, chat input, model selector)
-|   |-- globals.css                   # Complete CSS design system
-|   |
-|   |-- chat/page.tsx                 # Chat interface with conversations
-|   |-- research/page.tsx             # Deep research agent UI
-|   |-- code/page.tsx                 # Code editor + AI assistant
-|   |-- projects/page.tsx             # Project management grid
-|   |-- memory/page.tsx               # Persistent memory manager
-|   |-- extensions/page.tsx           # Extension marketplace
-|   |-- settings/page.tsx             # Settings (Profile, Models, Theme, Keys, Privacy)
-|   |-- admin/page.tsx                # Admin dashboard (stats, users, health)
-|   |-- docs/page.tsx                 # Searchable documentation
-|   |
-|   |-- api/
-|       |-- chat/route.ts             # SSE streaming chat
-|       |-- models/route.ts           # Model listing and selection
-|       |-- conversations/            # Conversation CRUD
-|       |-- messages/route.ts         # Message operations
-|       |-- research/                 # Research jobs (run, status)
-|       |-- code/                     # Code tools (explain, refactor, generate, run, debug, tests)
-|       |-- projects/                 # Project CRUD
-|       |-- memory/                   # Memory CRUD
-|       |-- rag/                      # RAG pipeline (ingest, query, search, rerank, feedback, reindex)
-|       |-- tools/                    # Tool endpoints (browser, sql, vector-search, external-api)
-|       |-- extensions/               # Extension APIs (chrome, excel, powerpoint)
-|       |-- keys/                     # API key management
-|       |-- usage/                    # Usage metrics (overview, tokens, history)
-|       |-- admin/                    # Admin APIs (users, rag-stats, feedback)
-|       |-- health/route.ts           # Health check
-|       |-- metrics/route.ts          # Performance metrics
-|       |-- features/route.ts         # Feature flags (all enabled)
-|       |-- file/upload/route.ts      # File upload
-|       |-- webhooks/                 # Webhook handlers (sanity, segment, intercom)
-|
-|-- components/
-|   |-- layout/
-|   |   |-- Sidebar.tsx               # Collapsible navigation sidebar
-|   |   |-- Topbar.tsx                # Top bar with theme toggle
-|   |-- theme/
-|       |-- ThemeProvider.tsx          # Theme context (light/dark/system)
-|
-|-- lib/
-|   |-- api-helpers.ts                # Shared API response utilities
-|
-|-- public/                           # Static assets
-|-- package.json
-|-- tsconfig.json
-|-- next.config.ts
-```
 
 ---
 

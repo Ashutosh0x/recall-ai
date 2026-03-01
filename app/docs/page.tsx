@@ -37,21 +37,13 @@ const docs: DocArticle[] = [
         tags: ['environment', 'config', 'env', 'api key', 'database', 'redis', 'pinecone', 'jwt'],
         content: `Create a .env.local file in the project root.\n\nRequired variables:\n- ANTHROPIC_API_KEY: Your Claude API key\n- DATABASE_URL: PostgreSQL connection string\n- REDIS_URL: Redis connection string\n- PINECONE_API_KEY: Pinecone vector DB key\n- PINECONE_INDEX: Name of your Pinecone index\n- JWT_SECRET: Secret for JWT signing (use RS256 in production)\n\nOptional variables:\n- DEFAULT_MODEL: Default AI model (sonnet-4.6)\n- ENABLE_EXTENDED_THINKING: Enable extended thinking (true)\n- ENABLE_TOOL_USE: Enable tool use (true)\n- ENABLE_WEB_SEARCH: Enable web search (true)\n- OTEL_ENDPOINT: OpenTelemetry collector URL\n- LOG_LEVEL: Logging level (info)\n- S3_BUCKET: File upload bucket\n- S3_REGION: AWS region`,
     },
-    {
-        id: 'project-structure',
-        title: 'Project Structure',
-        category: 'Getting Started',
-        tags: ['folder', 'directory', 'files', 'structure', 'layout', 'organization'],
-        content: `recall/\n  app/\n    layout.tsx           Root layout (ThemeProvider + shell)\n    page.tsx             Home page\n    globals.css          CSS design system\n    chat/page.tsx        Chat interface\n    research/page.tsx    Deep research UI\n    code/page.tsx        Code editor + AI assistant\n    projects/page.tsx    Project management\n    memory/page.tsx      Persistent memory\n    extensions/page.tsx  Extension marketplace\n    settings/page.tsx    User settings\n    admin/page.tsx       Admin dashboard\n    docs/page.tsx        Documentation (this page)\n    api/                 50+ API route handlers\n\n  components/\n    layout/Sidebar.tsx   Navigation sidebar\n    layout/Topbar.tsx    Top bar with theme toggle\n    theme/ThemeProvider  Theme context\n\n  lib/\n    api-helpers.ts       Shared response utilities`,
-    },
-
     /* ---- Architecture ---------------------------------------------- */
     {
         id: 'architecture',
         title: 'System Architecture',
         category: 'Architecture',
         tags: ['architecture', 'system', 'design', 'overview', 'diagram', 'flow'],
-        content: `Recall follows a modern full-stack architecture:\n\nClient (Browser)\n  -> Next.js App Router (Pages + Layouts)\n     -> Client Components (React 19, Heroicons)\n     -> API Route Handlers (/api/*)\n        -> External Services (Claude API, Pinecone, Redis, PostgreSQL)\n\nKey architectural decisions:\n- App Router for server-side rendering and streaming\n- CSS Custom Properties for theming (no Tailwind)\n- Heroicons for consistent iconography\n- SSE (Server-Sent Events) for chat streaming\n- Consistent JSON envelope for all API responses\n- All features unlocked, no billing layer`,
+        content: `Recall follows a modern full-stack architecture built on Next.js App Router.\n\n[Architecture Diagram]\nClient (Browser)\n  -> Next.js App Router\n     -> Frontend Layers (Client Components, ThemeProvider, Layout Shell, Feature Pages)\n     -> Backend Services (Auth, Claude SDK, RAG Pipeline, MCP Client, Code Sandbox, Prisma/DB)\n\nKey architectural pillars:\n- App Router for streaming and SSR\n- Modular Service Architecture in lib/\n- Unified API Envelope for all responses\n- RAG Pipeline with vector retrieval\n- MCP Protocol for tool extensibility`,
     },
     {
         id: 'rag-pipeline',
