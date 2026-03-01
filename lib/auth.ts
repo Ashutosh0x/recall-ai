@@ -72,14 +72,24 @@ export async function getAuthUser(request: NextRequest): Promise<AuthUser | null
 
 async function authenticateApiKey(key: string): Promise<AuthUser | null> {
     try {
-        const keyHash = await bcrypt.hash(key, 10);
-        // In production, we'd hash and compare. For dev, check prefix.
-        const apiKey = await db.apiKey.findFirst({
+        const apiKeys = await db.apiKey.findMany({
             where: { prefix: key.slice(0, 15) },
             include: { user: true },
         });
-        if (!apiKey) return null;
-        return { userId: apiKey.userId, email: apiKey.user.email, role: apiKey.user.role };
+
+        for (const apiKey of apiKeys) {
+            const isMatch = await bcrypt.compare(key, apiKey.keyHash);
+            if (!isMatch) continue;
+
+            await db.apiKey.update({
+                where: { id: apiKey.id },
+                data: { lastUsed: new Date() },
+            });
+
+            return { userId: apiKey.userId, email: apiKey.user.email, role: apiKey.user.role };
+        }
+
+        return null;
     } catch {
         return null;
     }
