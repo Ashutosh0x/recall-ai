@@ -11,6 +11,9 @@
   <img src="https://img.shields.io/badge/License-MIT-22C55E?style=flat-square" alt="License" />
 </p>
 
+<img width="2752" height="1536" alt="unwatermarked_Gemini_Generated_Image_5a3y4e5a3y4e5a3y" src="https://github.com/user-attachments/assets/f93cd716-7c83-4aa2-a09c-ce9e2c506985" />
+
+
 <p align="center">
   A production-grade AI workspace platform inspired by Claude.com.<br/>
   Chat, Research, Code, Projects, Memory, Extensions — all features unlocked, no billing gates.
